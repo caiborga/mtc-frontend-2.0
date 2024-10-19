@@ -1,0 +1,39 @@
+<!-- ALERTS -->
+<app-message-box></app-message-box>
+
+@if ( isAuthenticated ) {
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-2 sticky-header">
+        <a class="navbar-brand">Pack ma's</a>
+        <button class="navbar-toggler" type="button" (click)="toggleNavbar = !toggleNavbar" data-toggle="collapse"
+            data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor01" [ngbCollapse]="toggleNavbar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" style="cursor: pointer;" routerLink="/home" routerLinkActive="active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="cursor: pointer;" routerLink="/things" routerLinkActive="active">Gepäck</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="cursor: pointer;" routerLink="/participants"
+                        routerLinkActive="active">Teilnehmende</a>
+                </li>
+            </ul>
+            <form class="form-inline">
+                <div class="d-flex align-items-center">
+                    <button type="button" class="btn btn-outline-secondary me-2" placement="bottom" ngbTooltip="Link kopieren"
+                        (click)="copyToClipboard()">
+                        <i class="ph ph-share-network text-primary"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary me-2" placement="bottom"
+                        ngbTooltip="{{group.name}} / {{group.key}} abmelden" (click)="logout()">
+                        <i class="ph ph-sign-out text-danger"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </nav>
+}
+

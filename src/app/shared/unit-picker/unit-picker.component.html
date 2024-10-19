@@ -1,0 +1,6 @@
+<select class="form-select" aria-label="Default select example" style="height: 58px;" (change)="setUnit($event)">
+    <option disabled selected value="">Einheit<span class="text-danger">*</span></option>
+    @for (thing of units | keyvalue; track thing) {
+        <option value="{{thing.value.id}}">{{thing.value.unit}}</option>
+    }
+</select>

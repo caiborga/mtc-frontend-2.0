@@ -1,0 +1,82 @@
+<i [class]="symbol" style="cursor: pointer;"></i>
+
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Neuer Gegenstand</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+        <form [formGroup]="thingForm">
+			<div class="mb-3">
+                <!-- CATEGORY -->
+                @if (data.relevantColumns.category) {
+                    <select class="form-select mb-3" style="height: 55px" formControlName="category">
+                        <option selected value="">Kategorie@if(thingForm.controls.category.invalid){<span class="text-danger">*</span>}</option>
+                        <option value="food">Nahungsmittel</option>
+                        <option value="consumables">Verbrauchsmaterial</option>
+                        <option value="items">Gegenstände</option>
+                    </select>
+                }
+                <!-- NAME -->
+                @if (data.relevantColumns.name) {
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="floatingInput" placeholder="Name" formControlName="name">
+                        <label for="floatingInput">Name@if(thingForm.controls.name.invalid){<span class="text-danger">*</span>}</label>
+                    </div>
+                }
+                <!-- UNIT -->
+                @if (data.relevantColumns.unit) {
+                    <div class="mb-3">
+                        <app-unit-picker 
+                            (unitOutput)="thingForm.controls['unit'].setValue($event); setWeight()" 
+                            [unitInput]="thingForm.controls['unit'].value!">
+                        </app-unit-picker>
+                    </div>
+                }
+                <!-- PERPERSON -->
+                @if (data.relevantColumns.perPerson) {
+                    <div class="input-group mb-3">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="floatingInput" placeholder="Name" formControlName="perPerson" (change)="setWeight()">
+                            <label for="floatingInput">Pro Kopf pro Tag@if(thingForm.controls.perPerson.invalid){<span class="text-danger">*</span>}</label>
+                        </div>
+                        <span class="input-group-text">
+                            <i 
+                                class="ph ph-info" 
+                                ngbPopover="{{'Wie viel wird pro Kopf und Tag benötigt? Auf Basis dieser Angabe kann anhand der Anzahl Teilnehmender und Tagen die Gesamtmenge bestimmt werden. '}}"
+                                placement="end"
+                                popoverTitle="{{'Erläuterung'}}"
+                                style="cursor: pointer;"
+                                >
+                            </i>
+                        </span>
+                    </div>
+                }
+
+                <!-- WEIGHT --> 
+                @if (data.relevantColumns.weight) {
+                    <div class="input-group mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" formControlName="weight">
+                            <label for="floatingInput">Gewicht in kg</label>
+                        </div>
+                        <span class="input-group-text">
+                            <i 
+                                class="ph ph-info" 
+                                ngbPopover="{{'Dieser Wert wird anhand der Pro-Kopf-pro-Tag Angabe automatisch ermittelt. Eine manuelle Anpassung ist möglich und sinnvoll, wenn die Dichte eines Stoffes sehr hoch oder niedrig ist. Ein Beispiel wäre Öl.'}}"
+                                placement="end"
+                                popoverTitle="{{'Erläuterung'}}"
+                                style="cursor: pointer;"
+                                >
+                            </i>
+                        </span>
+                    </div>
+                }
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		@if(selectedThingID == -1){<button type="button" class="btn btn-outline-dark" (click)="newThing(); modal.close(); initializeModal()" [disabled]="thingForm.invalid">Speichern</button>}
+        @if(selectedThingID != -1){<button type="button" class="btn btn-outline-dark" (click)="editThing(); modal.close(); initializeModal()" [disabled]="thingForm.invalid">Ändern</button>}
+	</div>
+</ng-template>

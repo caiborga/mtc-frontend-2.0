@@ -1,0 +1,29 @@
+<app-message-box ></app-message-box>
+
+<i [class]="symbol" style="cursor: pointer;"></i>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        @if (editParticipantInput){<h4 class="modal-title" id="modal-basic-title">{{editParticipantInput.name}} editieren</h4>}
+        @if (!editParticipantInput){<h4 class="modal-title" id="modal-basic-title">Neue Teilnehmende</h4>}
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss(); resetForm()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="d-flex justify-content-center gap-2">
+            @if (editParticipantInput){
+                <img class="rounded" style="height: 58px; width: auto;" src="assets\images\avatars\{{editParticipantInput.avatar}}thumbnail.jpg">
+            }
+            <form [formGroup]="participantForm" class="w-100">
+                <div class="form-floating">
+                    <input type="email" class="form-control w-100" id="floatingInput" placeholder="Name" formControlName="name">
+                    <label for="floatingInput">Name</label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        @if (this.participantForm.get('id')!.value == '') {<button type="button" class="btn btn-outline-dark" (click)="addParticipant(); modal.close(); resetForm()" [disabled]="participantForm.invalid">Hinzufügen</button>}
+        @if (this.participantForm.get('id')!.value != '') {<button type="button" class="btn btn-outline-dark" (click)="editParticipant(); modal.close(); resetForm()" [disabled]="participantForm.invalid">Ändern</button>}
+    </div>
+</ng-template>
+

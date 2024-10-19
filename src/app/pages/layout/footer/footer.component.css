@@ -1,0 +1,27 @@
+/* footer.component.css */
+/* footer {
+    background-image: url('C:/Users/4dacr/Pictures/pano.jpg');
+    height: 50px;
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+} */
+
+footer {
+    /* background-image: url('C:/Users/4dacr/Pictures/pano3.jpg');
+    background-repeat: repeat; 
+    background-size: contain;  */
+    color: white;
+    background-color: #696d7d;
+    padding: 10px; 
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+  }
+  
+  footer p {
+    margin: 0; /* Entferne den Standardmargin des <p>-Elements */
+  }

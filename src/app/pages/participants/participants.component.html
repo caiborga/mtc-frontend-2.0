@@ -1,0 +1,65 @@
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb m-3">
+        <li class="breadcrumb-item"><a [routerLink]="['/home']" routerLinkActive="router-link-active" >Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Teilnehmende</li>
+    </ol>
+</nav>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row d-flex align-items-center">
+            <div class="col d-flex justify-content-start">
+                <h5>Teilnehmende</h5>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" (click)="AddParticipantComponent.openModal();">
+                    <app-add-participant
+                        (reloadData)="getParticipants()"
+                        [editParticipantInput]="editParticipant"
+                        >
+                    </app-add-participant>
+                </button>
+            </div>
+        </div>
+       
+    </div>
+
+    @if(!loadingData) {
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <!-- <th scope="col">#</th> -->
+                        <th class="col-md-4">Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (participant of participants; track participant) {
+                        <tr>
+                            <!-- <th scope="row">1</th> -->
+                            <td style="height: 50px;">
+                                <img class="rounded" style="height: 30px; width: 30px;" src="assets\images\avatars\{{participant.avatar}}thumbnail.jpg"> {{participant.name}}
+                            </td>
+                            <td style="height: 50px;" class="d-flex justify-content-end align-items-center gap-1">
+                                <i class="ph ph-pencil-simple text-warning" style="cursor: pointer;" (click)="editParticipant = participant"></i>
+                                <i class="ph ph-trash text-danger" style="cursor: pointer;" (click)="deleteParticipant(participant.id)"></i>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <div class="m-2">
+                            Bisher keine Einträge
+                        </div>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }@else{
+        <div class="d-flex justify-content-center my-3">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+    }
+</div>
+

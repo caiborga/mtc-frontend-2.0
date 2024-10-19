@@ -1,0 +1,47 @@
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb m-3">
+        <li class="breadcrumb-item"><a [routerLink]="['/home']" routerLinkActive="router-link-active" >Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Mitbringsel</li>
+    </ol>
+</nav>
+
+<ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs mt-2">
+    <!-- <li [ngbNavItem]="0">
+        <button ngbNavLink>Gerichte</button>
+        <ng-template ngbNavContent>
+            <app-meal></app-meal>
+        </ng-template>
+    </li> -->
+    <li [ngbNavItem]="1">
+        <button ngbNavLink>Nahrungsmittel</button>
+        <ng-template ngbNavContent>
+            <app-thing 
+                [data]="categories[0]"
+                (reloadData)="loadThings()"
+                >
+            </app-thing>
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="2">
+        <button ngbNavLink>Verbrauchsmaterial</button>
+        <ng-template ngbNavContent>
+            <app-thing 
+                [data]="categories[1]"
+                (reloadData)="loadThings()"
+                >
+            </app-thing>
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="3">
+        <button ngbNavLink>Gegenstände</button>
+        <ng-template ngbNavContent>
+            <app-thing 
+                [data]="categories[2]"
+                (reloadData)="loadThings()"
+                >
+            </app-thing>
+        </ng-template>
+    </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

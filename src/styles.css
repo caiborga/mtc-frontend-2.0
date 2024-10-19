@@ -1,0 +1,9 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* styles.css oder styles.scss */
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+}

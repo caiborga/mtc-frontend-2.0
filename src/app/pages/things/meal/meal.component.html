@@ -1,0 +1,148 @@
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h2>Gerichte</h2>
+        <button type="button" class="h-50 btn btn-primary mt-1" (click)="open(content)">Neues Gericht</button>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <!-- <th scope="col">#</th> -->
+                    <th class="col-md-4">Name</th>
+                    <th class="col-md-4">Personen</th>
+                    <th class="col-md-4">Zutaten</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (meal of meals; track meal.id) {
+        
+                    <tr>
+                        <!-- <th scope="row">1</th> -->
+                        <td>{{meal.name}}</td>
+                        <td>{{meal.persons}}</td>
+                        <td>
+                            @for (ingredient of meal.ingredients; track ingredient.id ) {
+                                <span class="badge text-bg-primary me-1 py-1">{{ingredient.quantity}} {{ingredient.unit.unit}} <b>{{ingredient.name}}</b> </span>
+                            }
+                        </td>
+                    </tr>
+        
+                    } @empty {
+                        <tr>
+                            <td>Kein Eintrag</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+            </tbody>
+            
+        </table>
+    </div>
+    
+</div>
+
+
+<!-- MEAL MODAL -->
+<ng-template #content let-mealModal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">
+            <h2>
+                @if(mealForm.get('name')?.value ) {
+                    {{ mealForm.get('name')?.value }}
+                }
+                @else {
+                    Neues Gericht
+                }
+            </h2>
+        </h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="mealModal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<form [formGroup]="mealForm">
+            
+            <label id="inputGroup-sizing-sm">Name</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                aria-label="Large" 
+                aria-describedby="inputGroup-sizing-sm" 
+                formControlName="name" 
+                [ngClass]="{'is-invalid': mealForm.get('name')!.hasError('required') && mealForm.get('name')!.touched}"
+            >
+
+            <label id="inputGroup-sizing-sm">Für wie viele Personen?</label>
+            <input
+                type="number" 
+                class="form-control" 
+                aria-label="Small" 
+                aria-describedby="inputGroup-sizing-sm"
+                formControlName="persons"
+                [ngClass]="{'is-invalid': mealForm.get('persons')!.hasError('required') && mealForm.get('persons')!.touched}"
+                >
+
+                @if (mealIngredients.length >= 0) {
+                    <table class="table m-0 mt-1">
+                        <thead>
+                            <tr>
+                                <th class="col-md-4">Name</th>
+                                <th class="col-md-4">Menge</th>
+                                <th class="col-md-4">Einheit</th>
+                                <th class="col-md-4">Gewicht</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (recepieIngridient of mealIngredients; track recepieIngridient.id) {
+                            <tr>
+                                <td class="col-md-4">{{recepieIngridient.name}}</td>
+                                <td class="col-md-4">{{recepieIngridient.quantity}}</td>
+                                <td class="col-md-4">{{recepieIngridient.unit.unit}}</td>
+                                <td class="col-md-4">{{recepieIngridient.unit.weight}}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+            <div class="input-group mb-3">
+                <input 
+                    type="text"
+                    class="form-control" 
+                    placeholder="Name" 
+                    aria-label="Recipient's username" 
+                    aria-describedby="basic-addon2"
+                    [(ngModel)]="newIngredient.name"
+                    [ngModelOptions]="{standalone: true}"
+                >
+            
+                <input 
+                    type="text"
+                    class="form-control" 
+                    placeholder="z.B. 100" 
+                    aria-label="Recipient's username" 
+                    aria-describedby="basic-addon2"
+                    [(ngModel)]="newIngredient.quantity"
+                    [ngModelOptions]="{standalone: true}"
+                >
+
+                <app-unit-picker (unitOutput)="setUnit($event)"></app-unit-picker>
+
+                <input 
+                    type="number"
+                    class="form-control" 
+                    placeholder="Gewicht" 
+                    aria-label="Recipient's username" 
+                    aria-describedby="basic-addon2"
+                    [(ngModel)]="newIngredient.weight"
+                    [ngModelOptions]="{standalone: true}"
+                >
+            </div>
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button" (click)="addMealIngrident()">Hinzufügen</button>
+            </div>
+			
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="addMeal(); mealModal.close('Save click')">Save</button>
+	</div>
+</ng-template>

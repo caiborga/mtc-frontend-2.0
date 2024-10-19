@@ -1,0 +1,8 @@
+.messageBox {
+    position: fixed;
+    top: 50px; /* Beispiel: 50px von der oberen Kante des Viewports entfernt */
+    left: 50vw; /* Das Element wird horizontal in der Mitte des Viewports positioniert */
+    transform: translateX(-50%); /* Zentrierung des Elements aufgrund der Breite des Divs */
+    padding: 10px; /* Innenabstand des Divs */
+    z-index: 3;
+}

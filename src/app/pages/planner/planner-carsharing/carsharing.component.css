@@ -1,0 +1,14 @@
+:host ::ng-deep {
+    [pDraggable] {
+        cursor: move;
+    }
+}
+
+.fixed {
+    position: fixed;
+    top: 50px;
+    left: 0px;
+    width: 100%;
+    z-index: 9999;
+    /* Füge hier weitere Stile für das fixierte div hinzu */
+  }

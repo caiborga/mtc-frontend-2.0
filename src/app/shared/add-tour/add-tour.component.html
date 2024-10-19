@@ -1,0 +1,68 @@
+<button type="button" class="btn btn-primary" (click)="open(tourModal)" style="height: 38px; width: 54px">
+    <div class="d-flex align-items-center justify-content-center">
+        <i [class]="icon"></i> 
+    </div>
+</button>
+
+<ng-template #tourModal let-modal>
+	<div class="modal-header">
+		@if (!tour) {<h4 class="modal-title" id="modal-basic-title">Neue Tour</h4>}
+		@if (tour) {<h4 class="modal-title" id="modal-basic-title">{{tour.tourData.name}} bearbeiten</h4>}
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+        <form [formGroup]="tourForm">
+			<div class="mb-3">
+                <!-- NAME -->
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="Name" formControlName="name">
+                    <label for="floatingInput">Name@if(tourForm.invalid){<span class="text-danger">*</span>}</label>
+                </div>
+                <!-- DESTINATION -->
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="Ziel" formControlName="destination">
+                    <label for="floatingInput">Ziel</label>
+                </div>
+                <!-- PERIOD -->
+                <app-date-picker
+                    (startDatePicked)="this.tourForm.get('start')!.setValue($event.toString())"
+                    (endDatePicked)="this.tourForm.get('end')!.setValue($event.toString())"
+                ></app-date-picker>
+                <!-- PARTICIPANTS -->
+                @if (!tour) {
+                    <div class="form-floating mb-3">
+                        <input
+                        #input
+                        id="typeahead-prevent-manual-entry"
+                        type="text"
+                        placeholder="Teilnehmer wählen.."
+                        class="form-control"
+                        [ngbTypeahead]="searchParticipants"
+                        [inputFormatter]="getParticipantName"
+                        [resultFormatter]="getParticipantID"
+                        [editable]="false"
+                        [disabled]="participantsMap.length == 0"
+                        (selectItem)="addParticipant($event)"
+                        />
+                        <label for="floatingInput">Nach Teilnehmenden hier suchen</label>
+                        @if(participantsMap.length == 0){
+                            <span class="text-danger ms-2" style="font-size: 12px;">Bisher wurden keine Teilnehmenden <a style="cursor: pointer;" routerLink="/participants" (click)="modal.dismiss()">erstellt</a></span>
+                        }
+
+                    </div>
+                }
+			</div>
+            @for (participant of newParticipants; track $index) {
+                <span class="badge text-bg-primary me-1 py-1">
+                    {{participantsMap[participant.id].name}}
+                    <!-- {{participantsMap[participant].name}} -->
+                    <i class="bi bi-x-circle" style="cursor: pointer;" (click)="removeParticipant(participant)"></i>
+                </span>
+            }
+		</form>
+	</div>
+	<div class="modal-footer">
+		@if (!tour) {<button type="button" class="btn btn-outline-dark" [disabled]="tourForm.invalid" (click)="newTour(); modal.close('Save click')">Speichern</button>}
+		@if (tour) {<button type="button" class="btn btn-outline-dark" [disabled]="tourForm.invalid" (click)="editTour(); modal.close('Save click')">Ändern</button>}
+	</div>
+</ng-template>

@@ -1,0 +1,299 @@
+<app-message-box ></app-message-box>
+
+@if (!loading) {
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb m-3">
+            <li class="breadcrumb-item"><a [routerLink]="['/home']" routerLinkActive="router-link-active" >Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{tourData.name}}</li>
+        </ol>
+    </nav>
+    <ng-container>
+        <!-- TOUR DETAILS -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col d-flex justify-content-start align-items-center gap-2">
+                        <h3 style="cursor: pointer;">{{tourData.name}}</h3> 
+                    </div>
+                    <div class="col d-flex justify-content-end gap-2">
+                        <div style = "width: 54px; height: 38px;">
+                        </div>
+                        <app-add-tour
+                            (loadData)="getTourData(tourID)"
+                            [icon]="'ph ph-pencil-simple'"
+                            [tour]="tour"
+                            [tourID]="tourID"
+                            >
+                        </app-add-tour>
+                        <div ngbDropdown class="d-inline-block">
+                            <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
+                                <i class="ph ph-list"></i>
+                            </button>
+                            <!-- MENU -->
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                <!-- PARTICIPANTS -->
+                                <button ngbDropdownItem (click)="showParticipantsBool = !showParticipantsBool; carSharingComponent.recalculateOffsetTop()">
+                                    <div class="d-flex align-items-center gap-2" [ngClass]="showParticipantsBool ? '' : 'text-secondary'">
+                                        <i 
+                                            class="ph ph-users-three fs-5"
+                                            style="cursor: pointer;" 
+                                            >
+                                        </i>
+                                        <span>Teilnehmende</span>
+                                    </div>
+                                </button>
+                                <!-- THINGS -->
+                                <button ngbDropdownItem (click)="showThingsBool = !showThingsBool; carSharingComponent.recalculateOffsetTop()">
+                                    <div class="d-flex align-items-center gap-2" [ngClass]="showThingsBool ? '' : 'text-secondary'">
+                                        <i 
+                                            class="ph ph-backpack fs-5"
+                                            style="cursor: pointer;"
+                                            >
+                                        </i>
+                                        <span>Gepäck</span>
+                                    </div>
+                                </button>
+                                <!-- CAR POOLING -->
+                                <button ngbDropdownItem (click)="showCarSharingBool = !showCarSharingBool">
+                                    <div class="d-flex align-items-center gap-2" [ngClass]="showCarSharingBool ? '' : 'text-secondary'">
+                                        <i 
+                                            class="ph ph-car fs-5" 
+                                            style="cursor: pointer;" 
+                                            >
+                                        </i>
+                                        <span>Fahrgemeinschaft</span>
+                                    </div>
+                                </button>
+                                <!-- DIVIDER -->
+                                <div class="dropdown-divider"></div>
+                                <!-- VIEW -->
+                                <button ngbDropdownItem (click)="tableView ? tableView = false : tableView = true; carSharingComponent.recalculateOffsetTop()">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i *ngIf="!tableView" class="ph ph-rows fs-5" style="cursor: pointer;" ></i>
+                                        <i *ngIf="tableView" class="ph ph-columns fs-5" style="cursor: pointer;"></i>
+                                        <span>Ansicht</span>
+                                    </div>
+                                </button>
+                                <!-- TOUR DETAILS -->
+                                <button ngbDropdownItem (click)="isCollapsed = !isCollapsed; carSharingComponent.recalculateOffsetTop()">
+                                    <div class="d-flex align-items-center gap-2" [ngClass]="!isCollapsed ? '' : 'text-secondary'">
+                                        <i class="bi bi-gear"></i>
+                                        <span>Tour Details</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    <!-- <i class="bi bi-cup-hot" style="cursor: pointer;" (click)="openModal(content)"></i> -->   
+                    </div>
+                </div>
+                
+            </div>
+            <div class="card-body mx-2" *ngIf="!isCollapsed">
+                <form [formGroup]="tourForm">
+                    <div class="row">
+                        <div class="col-8">
+                            <table class="table">
+                                <tbody>
+                                    <!-- ADRESS -->
+                                    <tr>
+                                        <th scope="row">Adresse:</th>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span>{{tourData.destination}}</span>
+                                                </div>
+                                                <!-- <div class="col-6">
+                                                    <div class="form-check">
+                                                        <input formControlName="arrivalChecked" class="form-check-input" type="checkbox" value="" id="flexCheckChecked" (change)="changeTourData()">
+                                                        <label class="form-check-label" for="flexCheckChecked">
+                                                            Anreise morgens
+                                                        </label>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- START -->
+                                    <tr>
+                                        <th scope="row">Anreise:</th>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="text-nowrap">{{tourData.start | date:'dd.MM.yyyy'}}</span>
+                                                </div>
+                                                <!-- <div class="col-6">
+                                                    <div class="form-check">
+                                                        <input formControlName="arrivalChecked" class="form-check-input" type="checkbox" value="" id="flexCheckChecked" (change)="changeTourData()">
+                                                        <label class="form-check-label" for="flexCheckChecked">
+                                                            Anreise morgens
+                                                        </label>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- END -->
+                                    <tr>
+                                        <th scope="row">Abreise:</th>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="text-nowrap">{{tourData.end | date:'dd.MM.yyyy'}}</span>
+                                                </div>
+                                                <!-- <div class="col-6">
+                                                    <div class="form-check">
+                                                        <input formControlName="departureChecked" class="form-check-input" type="checkbox" value="" id="flexCheckChecked" (change)="changeTourData()">
+                                                        <label class="form-check-label" for="flexCheckChecked">
+                                                            Abreise morgens
+                                                        </label>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- DAYS
+                                    <tr>
+                                        <th scope="row">Anzahl Tage:</th>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    {{tourParticipants.length}}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>  -->
+                                    <!-- PARTICIPANTS -->
+                                    <tr>
+                                        <th scope="row">Teilnehmende:</th>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    {{tourParticipants.length}}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- THINGS -->
+                                    <tr>
+                                        <th scope="row">Mitbringsel:</th>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    {{tourThings.length}}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-4 mt-3 mb-3">
+                            <google-map
+                                height="100%"
+                                width="100%"
+                                [center]="center"
+                                [options]="mapOptions"
+                                >
+                            </google-map>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- PARTICIPANTS -->
+            @if (showParticipantsBool) {
+                <div [ngClass]="tableView ? 'col' : ''">
+                    <app-planner-participants
+                        (reloadData)="getTourData(tourID); getParticipants(); getThings();"
+                        [participants] = "participants"
+                        [participantsMap] ="participantsMap"
+                        [thingsMap] = "thingsMap"
+                        [tourData] ="tourData"
+                        [tourID] = "tourID"
+                        [tourParticipants] = "tourParticipants"
+                        [tourThings] ="tourThings"
+                        [(showElement)] = "showParticipantsBool"
+                        >
+                    </app-planner-participants>
+                </div>
+            }
+            <!-- THINGS -->
+            @if (showThingsBool) {
+                <div [ngClass]="tableView ? 'col' : ''">
+                    <app-planner-things
+                        (reloadData)="getTourData(tourID); getParticipants(); getThings();"
+                        [participants]="participants"
+                        [things]="things"
+                        [tourData]="tourData"
+                        [tourID] = "tourID"
+                        [thingsMap]="thingsMap"
+                        [tourParticipants] = "tourParticipants"
+                        [tourThings]="tourThings"
+                        [(showElement)] = "showThingsBool"
+                        >
+                    </app-planner-things>
+                </div>
+            }
+            <!-- CARSHARING -->
+            @if (showCarSharingBool) {
+                <div [ngClass]="tableView ? 'col' : ''">
+                    <app-carsharing
+                        (showMessageBox) = "openMessageBox($event)"
+                        [tourCars] = "tourCars"
+                        [tourID] = "tourID"
+                        [tourParticipants]= "tourParticipants"
+                        [participantsMap]="participantsMap"
+                        [(showElement)] = "showCarSharingBool"
+                        >
+                    </app-carsharing>
+                </div>
+            }
+        </div>
+    </ng-container>
+}
+
+<!-- OFFCANVAS MEALS /TODO/ -->
+<ng-template #content let-offcanvas>
+	<div class="offcanvas-header">
+		<h4 class="offcanvas-title" id="offcanvas-basic-title">Mahzeilten Übersicht</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
+	</div>
+    @for (meal of meals; track meal; let i = $index;) {
+        <!-- <div class="offcanvas-body">
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-dark" (click)="offcanvas.close('Save click')">Save</button>
+            </div>
+        </div> -->
+        <div class="m-2">
+            <div 
+            class="card" 
+            style="height: 35px;"
+            >
+                <div>
+                    <span style="cursor: pointer;" (click)="isCollapsed = !isCollapsed">{{meal.type}}</span>
+                </div>
+            </div>
+            <div>
+                <select class="form-select" aria-label="Default select example">
+                    <option>Nicht zugewiesen</option>
+                    @for (participant of participants; track participant){
+                        <option>{{participant}}</option>
+                    }
+                </select>
+            </div>
+        </div>
+        
+    }
+
+	
+</ng-template>
+
+
+
+
+
+
+
+

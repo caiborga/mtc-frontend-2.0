@@ -1,0 +1,7 @@
+@if (showMessageBox) {
+	<div class="messageBox">
+		<ngb-alert #selfClosingAlert (type)="messageObject.type">{{ messageObject.message }}</ngb-alert>
+	</div>
+}
+
+

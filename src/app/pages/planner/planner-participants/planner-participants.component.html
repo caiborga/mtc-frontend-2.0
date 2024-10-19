@@ -1,0 +1,75 @@
+<div class="card mt-2 shadow-sm">
+    <!-- HEADER -->
+    <div class="card-header">
+        <div class="row">
+            <div class="col d-flex align-items-center justify-content-start gap-2">
+                <h5>Teilnehmer</h5>
+            </div>
+            <div class="col d-flex align-items-center justify-content-end gap-2">
+                <div class="input-group" style="min-width: 250px; max-width: 50%;">
+                    <select class="form-select form-select-sm" (change)="addTourParticipant($event)">
+                        <option selected>Teilnehmer wählen</option>
+                        @for (participant of participants; track participant.name) {
+                            @if (!isParticipantInTour(participant.id)) {
+                                <option [value]="participant.id">{{ participant.name }}</option>
+                            }
+                        } @empty {
+                            <li>Keine weiteren Teilnehmer verfügbar</li>
+                        }
+                    </select>
+                    <button class="btn btn-outline-secondary btn-sm" type="button" id="button-addon2" (click)="AddParticipantComponent.openModal()">
+                        <app-add-participant (reloadData)="reloadData.emit()"></app-add-participant>
+                    </button>
+                </div>
+                <div class="vr"></div>
+                <i class="ph ph-x" style="cursor: pointer;" (click)="showElementChange.emit(false)"></i>
+            </div>
+        </div>
+    </div>
+    <!-- BODY -->
+    <div class="card-body mx-2 mb-2">
+        @for (participant of tourParticipants; track participant.id; let  i = $index) {
+            <div ngbAccordion>
+                <div ngbAccordionItem [collapsed]="true">
+                    <h2 ngbAccordionHeader>
+                        <button ngbAccordionButton>
+                            <div class="d-flex align-items-center gap-1">
+                                <img
+                                    class="rounded me-2" 
+                                    style="height: 20px; width: auto;" 
+                                    src="assets\images\avatars\{{participantsMap[participant.id].avatar}}thumbnail.jpg"
+                                    >
+                                {{participantsMap[participant.id].name}}
+                                @if(participant && participantIsLazy(participant.id)) {
+                                    <i class="ph ph-trash text-danger" style="cursor: pointer;" (click)="removeTourParticipant(participant.id)"></i>
+                                }
+                            </div>
+                        </button>
+                    </h2>
+                    <div ngbAccordionCollapse>
+                        <div ngbAccordionBody>
+                            <ng-template>
+                                <ol class="list-group list-group-numbered">
+                                    @for (burden of tourThings; track burden;) {
+                                        @if(burden.carrier == participant.id){
+                                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                                <div class="ms-2 me-auto">
+                                                    <div [innerHTML]="getThingDetails(burden)"></div>
+                                                </div>
+                                                <!-- <span class="badge text-bg-primary rounded-pill">14</span> -->
+                                            </li>
+                                        }
+                                    } @empty {
+                                        Bisher nichts zugeordnet
+                                    }
+                                </ol>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        } @empty {
+            <button type="button" class="list-group-item list-group-item-action"> Bisher keine Teilnehmenden hinzugefügt </button>
+        }
+    </div>
+</div>

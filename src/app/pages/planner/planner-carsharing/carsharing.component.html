@@ -1,0 +1,97 @@
+<app-message-box ></app-message-box>
+
+<div class="card mt-2 shadow-sm">
+    <div class="card-header">
+        <div class="row">
+            <div class="col d-flex align-items-center justify-content-start gap-2">
+                <h5>Fahrgemeinschaft</h5>
+            </div>
+            <div class="col d-flex align-items-center justify-content-end gap-2">
+                <div class="input-group" style="min-width: 250px; max-width: 50%;">
+                    <input type="text" [readOnly]="true" class="form-control form-control-sm" id="exampleFormControlInput1" [(ngModel)]="carCount">
+                    <button [disabled]="tourParticipants.length == 0" class="btn btn-outline-secondary btn-sm align-items-center" type="button" (click)="setCarCount('increment')"><i class="ph ph-plus"></i></button>
+                    <button [disabled]="tourParticipants.length == 0" class="btn btn-outline-secondary btn-sm align-items-center" type="button" (click)="setCarCount('decrement')"><i class="ph ph-minus"></i></button>
+                </div>
+                <div class="vr"></div>
+                <i class="ph ph-x" style="cursor: pointer;" (click)="showElementChange.emit(false)"></i>
+            </div>
+        </div>
+        <div class="row d-flex align-items-center">
+            <div class="col-8">
+            </div>
+            <div class="col-4">
+                <div class="row d-flex align-items-center justify-content-end me-2">
+                    <!-- <label for="exampleFormControlInput1" class="form-label">Anzahl</label> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div [class.fixed]="isFixed" class="p-2 border-1 surface-border border-round w-15rem">
+            @for (participant of unassignedPassengers; track participant; let  i = $index) {
+                <span 
+                    class="badge text-bg-primary me-1 py-1" 
+                    style="cursor: pointer;" 
+                    pDraggable (onDragStart)="dragStart(participant)" 
+                    (onDragEnd)="dragEnd()"
+                    >
+                    <img
+                        class="rounded me-2" 
+                        style="height: 20px; width: auto;" 
+                        src="assets\images\avatars\{{participantsMap[participant].avatar}}thumbnail.jpg"
+                        >
+                    {{participantsMap[participant].name}}
+                </span>
+            }
+        </div>
+        @for (car of tourCars; track car; let i = $index){
+            <div class="p-2 border-1 surface-border border-round w-15rem" pDroppable (onDrop)="drop(i)">
+                <div class="card">
+                    <div class="card-header">
+                        <p class="text-center surface-border border-bottom-1">Auto {{i + 1}}</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <ul class="list-group">
+                                    @for (passenger of tourCars[i].passengers; track passenger) {
+                                        <li class="list-group-item d-flex align-items-center gap-1" style="height: 58px;">
+                                            <img 
+                                                class="rounded rounded-pill m-2" 
+                                                style="height: 20px; width: auto;" 
+                                                src="assets\images\avatars\{{participantsMap[passenger].avatar}}thumbnail.jpg" 
+                                                ngbTooltip="{{participantsMap[passenger].name}}"
+                                            >
+                                            <span>{{participantsMap[passenger].name}}</span>
+                                            <i class="ph ph-trash text-danger" style="cursor: pointer;" (click)="removePassengerFromCar(passenger, i)"></i>
+                                        </li>
+                                    }
+                                    @if (unassignedPassengers.length > 0) {
+                                        <li class="list-group-item d-flex align-items-center gap-1" style="height: 58px;">
+                                            <i class="ph ph-plus fs-5"></i>Drag and Drop
+                                        </li>
+                                    }
+                                    
+                                </ul>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" placeholder="Straße, 80337, München" [(ngModel)]="tourCars[i].meetingPoint" (change)="editTourCars()">
+                                    <label for="floatingInput">Treffpunkt</label>
+                                </div>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" placeholder="Straße, 80337, München" [(ngModel)]="tourCars[i].time" (change)="editTourCars()">
+                                    <label for="floatingInput">Abfahrt</label>
+                                </div>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" placeholder="" [(ngModel)]="tourCars[i].note" (change)="editTourCars()">
+                                    <label for="floatingInput">Sonstiges / Hinweise</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,5 @@
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Stellt sicher, dass der Header über anderen Inhalten bleibt */
+}

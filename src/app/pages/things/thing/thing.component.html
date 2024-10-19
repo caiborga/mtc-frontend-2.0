@@ -1,0 +1,66 @@
+<div class="card">
+    @if(!loadingData) {
+    <div class="card-header">
+        <div class="row d-flex align-items-center">
+            <div class="col">
+                <h5>{{data.title}}</h5>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" (click)="AddThingComponent.open(); AddThingComponent.initializeModal()">
+                    <app-add-thing
+                        (reloadData)="reloadData.emit();"
+                        [data]="data"
+                        >
+                    </app-add-thing>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <!-- <th scope="col">#</th> -->
+                        @if (data.relevantColumns.name){<th class="col-md-3">Name</th>}
+                        @if (data.relevantColumns.perPerson){<th class="col-md-3">Pro Kopf</th>}
+                        @if (data.relevantColumns.unit){<th class="col-md-3">Einheit</th>}
+                        @if (data.relevantColumns.weight){<th class="col-md-3">Gewicht</th>}
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (thing of data.things; track thing) {
+                        @if (thing.category == data.category) {
+                            <tr>
+                                @if (data.relevantColumns.name){<td>{{thing.name}}</td>}
+                                @if (data.relevantColumns.perPerson){<td>{{thing.per_person}}</td>}
+                                @if (data.relevantColumns.unit){<td>{{ foodUnits[thing.unit_id].unit }}</td>}
+                                @if (data.relevantColumns.weight){<td>{{thing.weight}} kg</td>}
+                                <td class="d-flex justify-content-end align-items-center gap-1">
+                                        <app-add-thing
+                                            (click)="AddThingComponent.open(); AddThingComponent.initializeModal(thing.id)"
+                                            (reloadData)="reloadData.emit();"
+                                            [symbol]="'ph ph-pencil-simple text-warning'"
+                                            [data]="data">
+                                        </app-add-thing>
+                                    <i class="ph ph-trash text-danger" style="cursor: pointer;" (click)="deleteThing(thing.id)"></i>
+                                </td>
+                            </tr>
+                            }
+                    } @empty {
+                        <div class="m-2">
+                            Bisher keine Einträge
+                        </div>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }@else{
+        <div class="d-flex justify-content-center my-3">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+    }
+</div>
